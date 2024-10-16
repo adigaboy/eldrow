@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Input Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-bottom: 20px;
+        }
+        .char-input {
+            width: 30px; /* Width for main inputs */
+            height: 40px; /* Height for main inputs */
+            margin: 0 5px;
+            text-align: center;
+            font-size: 18px; /* Font size */
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px; /* Button font size */
+        }
+        .excluded-container, .unbound-container {
+            margin-top: 20px;
+        }
+        .excluded-label, .unbound-label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .excluded-input, .unbound-input {
+            width: 400px; /* Width for inputs */
+            height: 40px; /* Same height as main inputs */
+            font-size: 18px; /* Font size */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Character Input Manager</h1>
+    <div class="container" id="inputContainer">
+        <input type="text" class="char-input" maxLength="1"> <!-- Default input field -->
+    </div>
+    <button id="addButton">Add Character</button>
+    <button id="removeButton">Remove Character</button>
+    <button id="submitButton">Submit</button>
+
+    <div class="excluded-container">
+        <label class="excluded-label" for="excludedChar">Excluded characters:</label>
+        <input type="text" id="excludedChar" class="excluded-input"> <!-- Excluded character input -->
+    </div>
+
+    <div class="unbound-container">
+        <label class="unbound-label" for="unboundChars">Unbound location characters:</label>
+        <input type="text" id="unboundChars" class="unbound-input"> <!-- Unbound characters input -->
+    </div>
+
+    <script>
+        const inputContainer = document.getElementById('inputContainer');
+        const addButton = document.getElementById('addButton');
+        const removeButton = document.getElementById('removeButton');
+        const submitButton = document.getElementById('submitButton');
+
+        addButton.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.maxLength = 1; // Allow only one character for main inputs
+            input.className = 'char-input'; // Add class to the new input
+            inputContainer.appendChild(input);
+        });
+
+        removeButton.addEventListener('click', () => {
+            const inputs = inputContainer.getElementsByTagName('input');
+            if (inputs.length > 1) { // Ensure at least one input remains
+                inputContainer.removeChild(inputs[inputs.length - 1]); // Remove the last input
+            }
+        });
+
+        submitButton.addEventListener('click', async () => {
+            const inputs = inputContainer.getElementsByClassName('char-input');
+            const excludedChars = document.getElementById('excludedChar').value; // Get excluded characters
+            const unboundChars = document.getElementById('unboundChars').value; // Get unbound characters
+            const formData = new FormData();
+
+            for (let i = 0; i < inputs.length; i++) {
+                const value = inputs[i].value; // Get the input value
+                formData.append(`characters`, value || ''); // Append input value (empty string if input is empty)
+            }
+
+            // Append excluded characters only if not empty
+            formData.append('excludedChars', excludedChars);
+
+            // Append unbound characters only if not empty
+            formData.append('unboundChars', unboundChars);
+
+            // Send the form data to the specified URL
+            try {
+                const response = await fetch('/options', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // Handle the response
+                if (response.ok) {
+                    const htmlResponse = await response.text();
+                    document.open();
+                    document.write(htmlResponse);
+                    document.close();
+                } else {
+                    alert('Error: ' + response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting.');
+            }
+        });
+    </script>
+
+</body>
+</html>

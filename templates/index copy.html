@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eldrow</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .word-input {
+            display: flex;
+            align-items: center;
+        }
+        .word-input input {
+            width: 30px; /* Adjust as needed */
+            text-align: center;
+        }
+        .word-input button {
+            background-color: #0074D9;
+            color: white;
+            border: none;
+            padding: 0.5em 1em;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        let charCount = 1; // Initial character count
+
+        function addCharacterInput() {
+            if (charCount < 18) {
+                charCount++;
+                const inputContainer = document.querySelector('.word-input');
+                const newInput = document.createElement('input');
+                newInput.type = 'text';
+                newInput.maxLength = 1;
+                inputContainer.appendChild(newInput);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Build your word and view all options</h1>
+    <br>
+    <div class="word-input">
+        <input type="text" maxlength="1">
+        <button onclick="addCharacterInput()">+</button>
+        <button>-</button>
+    </div>
+    <button>Submit</button>
+</body>
+</html>

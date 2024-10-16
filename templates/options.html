@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #35424a;
+        }
+        .word-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow words to wrap to the next line */
+            gap: 10px; /* Space between words */
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .word {
+            background: #e0e0e0; /* Background color for each word */
+            padding: 5px 10px;
+            border-radius: 3px;
+            white-space: nowrap; /* Prevent word wrapping within a single word */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Options for: {{ char_request | join(", ") }}</h1>
+    
+    <div class="word-container">
+        {% for word in perms %}
+            <div class="word">{{ word }}</div>
+        {% endfor %}
+    </div>
+    <h1>Excluded Characters: {{ excluded_chars | join(", ") }}</h1> <!-- Display excluded characters -->
+    <h1>Unbound Characters: {{ unbound_chars | join(", ") }}</h1> <!-- Display excluded characters -->
+
+</body>
+</html>
